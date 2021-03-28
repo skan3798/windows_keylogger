@@ -38,6 +38,12 @@ class EventManager:
         try:
             print("Pushing data to backend")
             # TODO: push to api (POST to hotchips)
+            payload = {}
+            i = 0
+            for e in self.history:
+                payload[i] = e.toJSON()
+            
+            
             return 0
         except Exception:
             print("Error pushing to backend")
@@ -56,3 +62,15 @@ class KeyEvent:
         
     def __str__(self):
         return f"KeyEvent(\n\tdatetime: {self.datetime}\n\tepochTime: {self.epochTime}\n\tmessageName: {self.messageName}\n\twindowName: {self.windowName}\n\tasciiCode: {self.asciiCode}\n\tasciiChar: {self.asciiChar}\n\tcaps: {self.caps}\n\tprocessedKey: {self.processedKey}\n)"
+        
+    def toJSON(self):
+        res = {}
+        res["datetime"] = self.datetime
+        res["epochTime"] = self.epochTime
+        res["messageName"] = self.messageName
+        res["windowName"] = self.windowName
+        res["asciiCode"] = self.asciiCode
+        res["asciiChar"] = self.asciiChar
+        res["caps"] = self.caps
+        res["processedKey"] = self.processedKey
+        return res

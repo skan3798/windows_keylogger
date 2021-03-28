@@ -16,11 +16,9 @@ class EventManager:
     
     def addEvent(self, keyEvent):
         if type(keyEvent) == KeyEvent:
-            print("THIS IS A KEY EVENT")
-            
+            self.__pushEvent(keyEvent)
         else:
-            print("NOT KEY EVENT")
-    
+            pass    
     '''
         event: KeyEvent
         pushes
@@ -50,18 +48,19 @@ class EventManager:
             return 1
 
 class KeyEvent:
-    def __init__(self,datetime, epochTime, messageName, windowName, asciiCode, asciiChar,caps, processedKey):
+    def __init__(self,datetime, epochTime, messageName, windowName, asciiCode, asciiChar, keyName, caps, processedKey):
         self.datetime = datetime # datetime in format "%d/%m/%Y %H:%M:%S"
         self.epochTime = epochTime # epoch seconds
         self.messageName = messageName # e.g. 'key up' or 'key down'
         self.windowName = windowName # Name of the foreground window at the time of the event
         self.asciiCode = asciiCode # integer
         self.asciiChar = asciiChar # char
+        self.keyName = keyName # string
         self.caps = caps # isCapital?
         self.processedKey = processedKey # `asciiChar` after parsing with caps
         
     def __str__(self):
-        return f"KeyEvent(\n\tdatetime: {self.datetime}\n\tepochTime: {self.epochTime}\n\tmessageName: {self.messageName}\n\twindowName: {self.windowName}\n\tasciiCode: {self.asciiCode}\n\tasciiChar: {self.asciiChar}\n\tcaps: {self.caps}\n\tprocessedKey: {self.processedKey}\n)"
+        return f"KeyEvent(\n\tdatetime: {self.datetime}\n\tepochTime: {self.epochTime}\n\tmessageName: {self.messageName}\n\twindowName: {self.windowName}\n\tasciiCode: {self.asciiCode}\n\tasciiChar: {self.asciiChar}\n\tkeyName: {self.keyName}\n\tcaps: {self.caps}\n\tprocessedKey: {self.processedKey}\n)"
         
     def toJSON(self):
         res = {}
@@ -71,6 +70,7 @@ class KeyEvent:
         res["windowName"] = self.windowName
         res["asciiCode"] = self.asciiCode
         res["asciiChar"] = self.asciiChar
+        res["keyName"] = self.keyName
         res["caps"] = self.caps
         res["processedKey"] = self.processedKey
         return res

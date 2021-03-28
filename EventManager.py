@@ -5,17 +5,18 @@ Handles storing of keyevents and pushing to backend
 class EventManager:
     def __init__ (self):
         # self.caps = False # is capslock/shift currently activated?
-        self.history = []
+        self.history = {}
         self.historyCount = 0 # len(self.history)
         self.historyThreshold = 100
     
     
-    def addEvent(self, asciiCode, asciiChar, caps, windowName, processedKey, time):
-        event = KeyEvent(asciiCode, asciiChar, caps, windowName, processedKey, time)
-        self.__pushEvent(event)
+    # def addEvent(self, asciiCode, asciiChar, caps, windowName, processedKey, time):
+    #     event = KeyEvent(asciiCode, asciiChar, caps, windowName, processedKey, time)
+    #     self.__pushEvent(event)
     
     def addEvent(self, keyEvent):
         if type(keyEvent) == KeyEvent:
+            print("appending")
             self.__pushEvent(keyEvent)
         else:
             pass    
@@ -26,8 +27,10 @@ class EventManager:
     def __pushEvent(self, event):
         # append event to history
         # if historythreshold is hit, push to backend
-        
-        self.history.append(event)
+        print(self.historyCount)
+        # self.history.append(event)
+        self.history[self.historyCount] = event
+        self.historyCount += 1
         
         if self.historyCount >= self.historyThreshold:
             self.__pushHistoryToBackend()
@@ -38,10 +41,13 @@ class EventManager:
             # TODO: push to api (POST to hotchips)
             payload = {}
             i = 0
-            for e in self.history:
-                payload[i] = e.toJSON()
+            for e in range(self.historyCount):
+                payload[e] = self.history[e].toJSON()
             
+            self.history = {}
+            self.historyCount = 0
             
+            print(payload)
             return 0
         except Exception:
             print("Error pushing to backend")

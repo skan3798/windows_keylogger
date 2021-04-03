@@ -7,20 +7,20 @@ from EventManager import EventManager, KeyEvent
 from datetime import datetime
 import json
 
-#load the configurations from json file
-def load_cfg(path):
-    jsonres = {}
-    try:
-        with open(os.path.abspath(os.path.realpath(path)), 'r') as f:
-            jsonres = json.load(f)
-    except Exception as e:
-        print("Exception: ", e)
-    return jsonres
+    #load the configurations from json file
+    def load_cfg(path):
+        jsonres = {}
+        try:
+            with open(os.path.abspath(os.path.realpath(path)), 'r') as f:
+                jsonres = json.load(f)
+        except Exception as e:
+            print("Exception: ", e)
+        return jsonres
 
 class Logger:
 
     def __init__(self, exitKey):
-        self.caps = False # is capital?
+        self.caps = False # assume not in caps to begin
         self.exitKey = exitKey
     
     # Handler for KeyUp
@@ -70,7 +70,8 @@ class Logger:
         now_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
         now_epoch = now.timestamp()
         isCaps = self.caps
-        keyEvent = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), event.Key, isCaps, self.processKey(chr(event.Ascii), isCaps))
+        isKeyDown = self.isKeyDown(event.isKeyDown)
+        keyEvent = KeyEvent(now_datetime, now_epoch,isKeyDown, event.WindowName, event.Ascii, chr(event.Ascii), event.Key, isCaps, self.processKey(chr(event.Ascii)))
         print(keyEvent)
         
         return keyEvent
@@ -78,6 +79,12 @@ class Logger:
     # Toggle the state of `self.caps`
     def toggleCaps(self):
         self.caps = not self.caps
+        
+    # Input: 'key up' or 'key down'
+    def isKeyDown(self, keyStatus):
+        if keyStatus == "key down":
+            return True
+        return False
     
     
     '''

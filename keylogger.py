@@ -66,7 +66,8 @@ class Logger:
     # Generate KeyEvent object
     def createKeyEvent(self, event):
         now = datetime.now()
-        now_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
+        # Following ISO8601 format (YYYY-MM-DD HH:MM:SS)
+        now_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
         now_epoch = now.timestamp()
         isCaps = self.caps
         keyEvent = KeyEvent(now_datetime, now_epoch, event.MessageName, event.WindowName, event.Ascii, chr(event.Ascii), event.Key, isCaps, self.processKey(chr(event.Ascii), isCaps))

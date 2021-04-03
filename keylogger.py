@@ -70,7 +70,7 @@ class Logger:
         now_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
         now_epoch = now.timestamp()
         isCaps = self.caps
-        isKeyDown = self.isKeyDown(event.isKeyDown)
+        isKeyDown = self.isKeyDown(event.messageName)
         keyEvent = KeyEvent(now_datetime, now_epoch,isKeyDown, event.WindowName, event.Ascii, chr(event.Ascii), event.Key, isCaps, self.processKey(chr(event.Ascii)))
         print(keyEvent)
         

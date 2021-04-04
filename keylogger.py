@@ -70,8 +70,8 @@ class Logger:
         now_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
         now_epoch = now.timestamp()
         isCaps = self.caps
-        isKeyDown = self.isKeyDown(event.messageName)
-        keyEvent = KeyEvent(now_datetime, now_epoch,isKeyDown, event.WindowName, event.Ascii, chr(event.Ascii), event.Key, isCaps, self.processKey(chr(event.Ascii)))
+        isKeyDown = self.isKeyDown(event.MessageName)
+        keyEvent = KeyEvent(now_datetime, now_epoch,isKeyDown, event.WindowName, event.Ascii, chr(event.Ascii), event.Key, isCaps, self.processKey(chr(event.Ascii),isCaps))
         print(keyEvent)
         
         return keyEvent
@@ -83,8 +83,8 @@ class Logger:
     # Input: 'key up' or 'key down'
     def isKeyDown(self, keyStatus):
         if keyStatus == "key down":
-            return True
-        return False
+            return 1
+        return 0
     
     
     '''
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     
     win = win32console.GetConsoleWindow()
     
-    eventManager = EventManager()
+    eventManager = EventManager(main_cfg)
     
     logger = Logger(main_cfg["exitKey"])
     

@@ -20,7 +20,7 @@ def load_cfg(path):
 class Logger:
 
     def __init__(self, exitKey):
-        self.caps = False # assume not in caps to begin
+        self.caps = 0# assume not in caps to begin
         self.exitKey = exitKey
     
     # Handler for KeyUp
@@ -78,7 +78,10 @@ class Logger:
     
     # Toggle the state of `self.caps`
     def toggleCaps(self):
-        self.caps = not self.caps
+        if self.caps == 0:
+            self.caps = 1
+        else:
+            self.caps = 0
         
     # Input: 'key up' or 'key down'
     def isKeyDown(self, keyStatus):

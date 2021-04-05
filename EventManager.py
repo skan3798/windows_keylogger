@@ -69,10 +69,10 @@ class KeyEvent:
         self.isKeyDown = isKeyDown # e.g. 'key up' or 'key down'
         self.windowName = windowName # Name of the foreground window at the time of the event
         self.asciiCode = asciiCode # integer
-        self.asciiChar = checkSpecial(asciiCode,asciiChar) # char
+        self.asciiChar = self.checkSpecial(asciiCode,asciiChar) # char
         self.keyName = keyName # string
         self.isCaps = isCaps # isCapital?
-        self.processedKey = checkSpecial(asciiCode,processedKey) # `asciiChar` after parsing with caps
+        self.processedKey = self.checkSpecial(asciiCode,processedKey) # `asciiChar` after parsing with caps
         
     def __str__(self):
         return f"KeyEvent(\n\tdatetime: {self.datetime}\n\tepochTime: {self.epochTime}\n\tisKeyDown: {self.isKeyDown}\n\twindowName: {self.windowName}\n\tasciiCode: {self.asciiCode}\n\tasciiChar: {self.asciiChar}\n\tkeyName: {self.keyName}\n\tisCaps: {self.isCaps}\n\tprocessedKey: {self.processedKey}\n)"
@@ -96,4 +96,4 @@ class KeyEvent:
         if(code < 127 and code > 32):
             return key
         else:
-            return NULL
+            return None

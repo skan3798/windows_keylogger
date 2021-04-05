@@ -36,7 +36,7 @@ class EventManager:
         self.history[self.historyCount] = event
         self.historyCount += 1
         
-        if self.historyCount >= self.historyThreshold:
+        if (self.historyCount >= self.historyThreshold && (self.history[-1]["keyName"]=="Space" || self.history[-1]["keyName"]=="Return")):
             self.__pushHistoryToBackend()
             
     def __pushHistoryToBackend(self):

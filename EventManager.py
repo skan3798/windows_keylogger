@@ -1,14 +1,17 @@
 '''
 Handles storing of keyevents and pushing to backend
 '''
+
+import json
 import requests
 
 class EventManager:
-    def __init__ (self):
+    def __init__ (self, cfg):
         # self.caps = False # is capslock/shift currently activated?
         self.history = {}
         self.historyCount = 0 # len(self.history)
         self.historyThreshold = 100
+        self.main_cfg = cfg
     
     
     # def addEvent(self, asciiCode, asciiChar, caps, windowName, processedKey, time):
@@ -49,13 +52,14 @@ class EventManager:
             self.historyCount = 0
             
             # print(payload)
-            url = main_cfg['apiHost']+main_cfg['endpointPushKeys']
-            res = requests.post(url, payload)
+            jsonObj= json.dumps(payload)
+            print(jsonObj)
+            url = self.main_cfg['apiHost'] + self.main_cfg['endpointPushKeys']
+            res = requests.post(url, jsonObj)
             
-            print(res.json())
             return 0
-        except Exception:
-            print("Error pushing to backend")
+        except Exception as e:
+            print("Error pushing to backend", e)
             return 1
 
 class KeyEvent:
@@ -84,4 +88,4 @@ class KeyEvent:
         res["keyName"] = self.keyName
         res["isCaps"] = self.isCaps
         res["processedKey"] = self.processedKey
-        return res
+        return json.dumps(res)

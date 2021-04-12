@@ -8,16 +8,11 @@ import re
 
 class EventManager:
     def __init__ (self, cfg):
-        # self.caps = False # is capslock/shift currently activated?
         self.history = {}
-        self.historyCount = 0 # len(self.history)
+        self.historyCount = 0
         self.historyThreshold = 100
         self.main_cfg = cfg
     
-    
-    # def addEvent(self, asciiCode, asciiChar, caps, windowName, processedKey, time):
-    #     event = KeyEvent(asciiCode, asciiChar, caps, windowName, processedKey, time)
-    #     self.__pushEvent(event)
     
     def addEvent(self, keyEvent):
         if type(keyEvent) == KeyEvent:
@@ -27,11 +22,10 @@ class EventManager:
             pass    
     '''
         event: KeyEvent
-        pushes
     '''
     def __pushEvent(self, event):
         # append event to history
-        # if historythreshold is hit, push to backend
+        # if historythreshold is hit and last key-press is a Space or Return, push to backend
         print(self.historyCount)
         # self.history.append(event)
         self.history[self.historyCount] = event

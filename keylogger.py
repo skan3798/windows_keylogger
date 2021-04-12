@@ -97,12 +97,42 @@ class Logger:
     Otherwise, return the key itself
     '''
     def processKey(self, lowerKey, isCaps):
-        # TODO: add symbols
-        # if lowerKey.isAlpha():
-        if not isCaps:
-            return lowerKey
-        return lowerKey.upper()
-        # return lowerKey
+        if isCaps:
+            return self._shifted(lowerKey[0]) # [0] turns str to char
+        return lowerKey
+        
+    # Return value of key when shift is clicked
+    def _shifted(self, key):
+        shiftMappings = {
+            "`":"~",
+            "1":"!",
+            "2":"@",
+            "3":"#",
+            "4":"$",
+            "5":"%",
+            "6":"^",
+            "7":"&",
+            "8":"*",
+            "9":"(",
+            "0":")",
+            "-":"_",
+            "=":"+",
+            "[":"{",
+            "]":"}",
+            "\\":"|", # escaped the escape char (\)
+            ";":":",
+            "'":"\"",
+            ",":"<",
+            ".":">",
+            "/":"?"
+        }
+        
+        if key.isalpha():
+            return key.upper()
+        if key in shiftMappings:
+            return shiftMappings[key]
+        return key
+    
 
 
 if __name__ == "__main__":
@@ -148,6 +178,4 @@ On key up:
 * if shift, toggle self.caps
 
 This will work when shift/caps are held down, as they don't toggle unless pressed again
-
-
 '''

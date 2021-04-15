@@ -5,7 +5,10 @@ Handles storing of keyevents and pushing to backend
 import json
 import requests
 import re
-
+'''
+Event manager class that pushes to server side
+Pushes to backend after every 100 key presses and after a break character (To ensure backend word processing is done correctly)
+'''
 class EventManager:
     def __init__ (self, cfg):
         self.history = {}
@@ -27,7 +30,6 @@ class EventManager:
         # append event to history
         # if historythreshold is hit and last key-press is a Space or Return, push to backend
         print(self.historyCount)
-        # self.history.append(event)
         self.history[self.historyCount] = event
         self.historyCount += 1
         
@@ -56,6 +58,10 @@ class EventManager:
             print("Error pushing to backend", e)
             return 1
 
+'''
+KeyEvent class creates the key and includes all relevant fields to be pushed to the backend.
+Processes the key and checks that the ascii character is not a special key (e.g. space or return) as pushing this to database affects collection
+'''
 class KeyEvent:
     def __init__(self,datetime, epochTime, isKeyDown, windowName, asciiCode, asciiChar, keyName, isCaps, processedKey):
         self.datetime = datetime # datetime in format "%d/%m/%Y %H:%M:%S"
